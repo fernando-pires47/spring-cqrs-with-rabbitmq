@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  cqrs-query:
+    build: ./query
+    container_name: cqrs-query
+    environment:
+      SPRING_PROFILES_ACTIVE: "dev"
+      SERVER_PORT: "8080"
+      SPRING_RABBITMQ_HOST: "rabbitmq"
+    ports:
+      - "8070:8080"
+    depends_on:
+      - rabbitmq
+
+  cqrs-command:
+    build: ./command
+    container_name: cqrs-command
+    environment:
+      SPRING_PROFILES_ACTIVE: "dev"
+      SPRING_RABBITMQ_HOST: "rabbitmq"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "8090:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
